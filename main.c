@@ -105,12 +105,26 @@ void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackT
 
 void test_FPU_test(void* p) {
   float ff = 1.0f;
+    GPIO_InitTypeDef GPIO_InitStruct;
+
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
+
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_13;
+  GPIO_InitStruct.GPIO_Mode = GPIO_Mode_OUT;
+  GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
+  GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
+  GPIO_Init(GPIOC, &GPIO_InitStruct);
+
   printf("Start FPU test task.\n");
   for (;;) {
     float s = sinf(ff);
     ff += s;
     // TODO some other test
+    GPIO_SetBits(GPIOC,GPIO_Pin_13);
 
+    vTaskDelay(1000);
+    GPIO_ResetBits(GPIOC,GPIO_Pin_13);
     vTaskDelay(1000);
   }
 
