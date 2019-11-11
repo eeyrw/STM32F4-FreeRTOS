@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "jlink",
+            "cwd": "${workspaceRoot}",
+            "executable": "./binary/FreeRTOS.elf",
+            "name": "Debug (J-Link)",
+            "device": "STM32F401CC",
+            "interface": "swd",
+            "ipAddress": null,
+            "serialNumber": null,
+        }
+    ]
+}

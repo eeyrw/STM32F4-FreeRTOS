@@ -1,8 +1,9 @@
 TARGET:=FreeRTOS
 # TODO change to your ARM gcc toolchain path
-TOOLCHAIN_ROOT:=D:/arm-gcc
+TOOLCHAIN_ROOT:="E:/GNU Tools ARM Embedded/8 2019-q3-update"
 TOOLCHAIN_PATH:=$(TOOLCHAIN_ROOT)/bin
 TOOLCHAIN_PREFIX:=arm-none-eabi
+CURDIR=.
 
 # Optimization level, can be [0, 1, 2, 3, s].
 OPTLVL:=0
@@ -55,7 +56,7 @@ SRC+=stm32f4xx_rtc.c
 SRC+=stm32f4xx_adc.c
 SRC+=stm32f4xx_dma.c
 #SRC+=stm32f4xx_hash_md5.c
-SRC+=stm32f4xx_sai.c
+#SRC+=stm32f4xx_sai.c
 SRC+=stm32f4xx_can.c
 #SRC+=stm32f4xx_dma2d.c
 #SRC+=stm32f4xx_hash_sha1.c
@@ -94,7 +95,7 @@ SRC+=stm32f4xx_rng.c
 CDEFS=-DUSE_STDPERIPH_DRIVER
 CDEFS+=-DSTM32F4XX
 CDEFS+=-DSTM32F401xx
-CDEFS+=-DHSE_VALUE=8000000
+CDEFS+=-DHSE_VALUE=25000000
 CDEFS+=-D__FPU_PRESENT=1
 CDEFS+=-D__FPU_USED=1
 CDEFS+=-DARM_MATH_CM4
@@ -104,7 +105,7 @@ COMMONFLAGS=-O$(OPTLVL) $(DBG) -Wall -ffunction-sections -fdata-sections
 CFLAGS=$(COMMONFLAGS) $(MCUFLAGS) $(INCLUDE) $(CDEFS)
 
 LDLIBS=-lm -lc -lgcc
-LDFLAGS=$(MCUFLAGS) -u _scanf_float -u _printf_float -fno-exceptions -Wl,--gc-sections,-T$(LINKER_SCRIPT),-Map,$(BIN_DIR)/$(TARGET).map
+LDFLAGS=$(MCUFLAGS) -u _scanf_float -u _printf_float -nostartfiles -fno-exceptions -Wl,--gc-sections,-T$(LINKER_SCRIPT),-Map,$(BIN_DIR)/$(TARGET).map
 
 CC=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gcc
 LD=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gcc

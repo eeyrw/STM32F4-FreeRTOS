@@ -1,0 +1,7 @@
+{
+    "files.encoding": "utf8",
+    "C_Cpp.default.cStandard": "c99",
+    "C_Cpp.default.defines": ["NV32"],
+    "cortex-debug.JLinkGDBServerPath":"D:/SEGGER/JLink/JLinkGDBServerCL.exe"
+    
+}

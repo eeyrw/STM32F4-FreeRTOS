@@ -5,22 +5,20 @@
 #include "stdio.h"
 #include "stm32f4xx_usart.h"
 
-// Macro to use CCM (Core Coupled Memory) in STM32F4
-#define CCM_RAM __attribute__((section(".ccmram")))
 
 #define FPU_TASK_STACK_SIZE 256
 
-StackType_t fpuTaskStack[FPU_TASK_STACK_SIZE] CCM_RAM;  // Put task stack in CCM
-StaticTask_t fpuTaskBuffer CCM_RAM;  // Put TCB in CCM
+StackType_t fpuTaskStack[FPU_TASK_STACK_SIZE];  // Put task stack in CCM
+StaticTask_t fpuTaskBuffer;  // Put TCB in CCM
 
-void init_USART3(void);
+void init_USART2(void);
 
 void test_FPU_test(void* p);
 
 int main(void) {
   SystemInit();
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
-  init_USART3();
+  init_USART2();
 
   // Create a task
   // Stack and TCB are placed in CCM of STM32F4
@@ -73,8 +71,8 @@ void vApplicationStackOverflowHook(xTaskHandle pxTask, signed char *pcTaskName) 
   for(;;);
 }
 
-StaticTask_t xIdleTaskTCB CCM_RAM;
-StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE] CCM_RAM;
+StaticTask_t xIdleTaskTCB;
+StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
 
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
 implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
@@ -93,8 +91,8 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackTyp
   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
 }
 
-static StaticTask_t xTimerTaskTCB CCM_RAM;
-static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH] CCM_RAM;
+static StaticTask_t xTimerTaskTCB;
+static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
 
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
 application must provide an implementation of vApplicationGetTimerTaskMemory()
@@ -120,24 +118,24 @@ void test_FPU_test(void* p) {
 }
 
 /*
- * Configure USART3(PB10, PB11) to redirect printf data to host PC.
+ * Configure USART2(PA2, PA3) to redirect printf data to host PC.
  */
-void init_USART3(void) {
+void init_USART2(void) {
   GPIO_InitTypeDef GPIO_InitStruct;
   USART_InitTypeDef USART_InitStruct;
 
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3, ENABLE);
-  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOB, ENABLE);
+  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 
-  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_10 | GPIO_Pin_11;
+  GPIO_InitStruct.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3;
   GPIO_InitStruct.GPIO_Mode = GPIO_Mode_AF;
   GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStruct.GPIO_OType = GPIO_OType_PP;
   GPIO_InitStruct.GPIO_PuPd = GPIO_PuPd_UP;
   GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  GPIO_PinAFConfig(GPIOB, GPIO_PinSource10, GPIO_AF_USART3);
-  GPIO_PinAFConfig(GPIOB, GPIO_PinSource11, GPIO_AF_USART3);
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
+  GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
 
   USART_InitStruct.USART_BaudRate = 115200;
   USART_InitStruct.USART_WordLength = USART_WordLength_8b;
@@ -145,6 +143,6 @@ void init_USART3(void) {
   USART_InitStruct.USART_Parity = USART_Parity_No;
   USART_InitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
   USART_InitStruct.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
-  USART_Init(USART3, &USART_InitStruct);
-  USART_Cmd(USART3, ENABLE);
+  USART_Init(USART2, &USART_InitStruct);
+  USART_Cmd(USART2, ENABLE);
 }
