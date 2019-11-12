@@ -5,17 +5,17 @@
 #include "stdio.h"
 #include "stm32f4xx_usart.h"
 
-
 #define FPU_TASK_STACK_SIZE 256
 
-StackType_t fpuTaskStack[FPU_TASK_STACK_SIZE];  // Put task stack in CCM
-StaticTask_t fpuTaskBuffer;  // Put TCB in CCM
+StackType_t fpuTaskStack[FPU_TASK_STACK_SIZE]; // Put task stack in CCM
+StaticTask_t fpuTaskBuffer;                    // Put TCB in CCM
 
 void init_USART2(void);
 
-void test_FPU_test(void* p);
+void test_FPU_test(void *p);
 
-int main(void) {
+int main(void)
+{
   SystemInit();
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
   init_USART2();
@@ -26,12 +26,14 @@ int main(void) {
   xTaskCreateStatic(test_FPU_test, "FPU", FPU_TASK_STACK_SIZE, NULL, 1, fpuTaskStack, &fpuTaskBuffer);
 
   printf("System Started!\n");
-  vTaskStartScheduler();  // should never return
+  vTaskStartScheduler(); // should never return
 
-  for (;;);
+  for (;;)
+    ;
 }
 
-void vApplicationTickHook(void) {
+void vApplicationTickHook(void)
+{
 }
 
 /* vApplicationMallocFailedHook() will only be called if
@@ -44,9 +46,11 @@ void vApplicationTickHook(void) {
    FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be used
    to query the size of free heap space that remains (although it does not
    provide information on how the remaining heap might be fragmented). */
-void vApplicationMallocFailedHook(void) {
+void vApplicationMallocFailedHook(void)
+{
   taskDISABLE_INTERRUPTS();
-  for(;;);
+  for (;;)
+    ;
 }
 
 /* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is set
@@ -58,17 +62,20 @@ void vApplicationMallocFailedHook(void) {
    important that vApplicationIdleHook() is permitted to return to its calling
    function, because it is the responsibility of the idle task to clean up
    memory allocated by the kernel to any task that has since been deleted. */
-void vApplicationIdleHook(void) {
+void vApplicationIdleHook(void)
+{
 }
 
-void vApplicationStackOverflowHook(xTaskHandle pxTask, signed char *pcTaskName) {
-  (void) pcTaskName;
-  (void) pxTask;
+void vApplicationStackOverflowHook(xTaskHandle pxTask, signed char *pcTaskName)
+{
+  (void)pcTaskName;
+  (void)pxTask;
   /* Run time stack overflow checking is performed if
      configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
      function is called if a stack overflow is detected. */
   taskDISABLE_INTERRUPTS();
-  for(;;);
+  for (;;)
+    ;
 }
 
 StaticTask_t xIdleTaskTCB;
@@ -77,7 +84,8 @@ StackType_t uxIdleTaskStack[configMINIMAL_STACK_SIZE];
 /* configUSE_STATIC_ALLOCATION is set to 1, so the application must provide an
 implementation of vApplicationGetIdleTaskMemory() to provide the memory that is
 used by the Idle task. */
-void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize) {
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize)
+{
   /* Pass out a pointer to the StaticTask_t structure in which the Idle task's
   state will be stored. */
   *ppxIdleTaskTCBBuffer = &xIdleTaskTCB;
@@ -97,15 +105,17 @@ static StackType_t uxTimerTaskStack[configTIMER_TASK_STACK_DEPTH];
 /* configUSE_STATIC_ALLOCATION and configUSE_TIMERS are both set to 1, so the
 application must provide an implementation of vApplicationGetTimerTaskMemory()
 to provide the memory that is used by the Timer service task. */
-void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize) {
+void vApplicationGetTimerTaskMemory(StaticTask_t **ppxTimerTaskTCBBuffer, StackType_t **ppxTimerTaskStackBuffer, uint32_t *pulTimerTaskStackSize)
+{
   *ppxTimerTaskTCBBuffer = &xTimerTaskTCB;
   *ppxTimerTaskStackBuffer = uxTimerTaskStack;
   *pulTimerTaskStackSize = configTIMER_TASK_STACK_DEPTH;
 }
 
-void test_FPU_test(void* p) {
+void test_FPU_test(void *p)
+{
   float ff = 1.0f;
-    GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitTypeDef GPIO_InitStruct;
 
   RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOC, ENABLE);
 
@@ -117,14 +127,15 @@ void test_FPU_test(void* p) {
   GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   printf("Start FPU test task.\n");
-  for (;;) {
+  for (;;)
+  {
     float s = sinf(ff);
     ff += s;
     // TODO some other test
-    GPIO_SetBits(GPIOC,GPIO_Pin_13);
+    GPIO_SetBits(GPIOC, GPIO_Pin_13);
 
     vTaskDelay(1000);
-    GPIO_ResetBits(GPIOC,GPIO_Pin_13);
+    GPIO_ResetBits(GPIOC, GPIO_Pin_13);
     vTaskDelay(1000);
   }
 
@@ -134,7 +145,8 @@ void test_FPU_test(void* p) {
 /*
  * Configure USART2(PA2, PA3) to redirect printf data to host PC.
  */
-void init_USART2(void) {
+void init_USART2(void)
+{
   GPIO_InitTypeDef GPIO_InitStruct;
   USART_InitTypeDef USART_InitStruct;
 
