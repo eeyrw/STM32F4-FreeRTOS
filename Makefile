@@ -28,7 +28,8 @@ BIN_DIR = $(CURDIR)/binary
 # of the same directory as their source files
 vpath %.c $(CURDIR)/Libraries/STM32F4xx_StdPeriph_Driver/src \
           $(CURDIR)/Libraries/syscall $(CURDIR)/hardware $(FREERTOS) \
-          $(FREERTOS)/portable/MemMang $(FREERTOS)/portable/GCC/ARM_CM4F 
+          $(FREERTOS)/portable/MemMang $(FREERTOS)/portable/GCC/ARM_CM4F \
+		  $(CURDIR)/Libraries/STM32_USB_Device_Library
 
 vpath %.s $(STARTUP)
 ASRC=startup_stm32f401xx.s
@@ -91,6 +92,9 @@ SRC+=stm32f4xx_rcc.c
 SRC+=stm32f4xx_dbgmcu.c
 SRC+=stm32f4xx_gpio.c
 SRC+=stm32f4xx_rng.c
+
+
+
 
 CDEFS=-DUSE_STDPERIPH_DRIVER
 CDEFS+=-DSTM32F4XX
