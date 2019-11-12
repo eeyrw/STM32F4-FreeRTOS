@@ -1,7 +1,7 @@
 TARGET:=FreeRTOS
 # TODO change to your ARM gcc toolchain path
-TOOLCHAIN_ROOT:="E:/GNU Tools ARM Embedded/8 2019-q3-update"
-TOOLCHAIN_PATH:=$(TOOLCHAIN_ROOT)/bin
+TOOLCHAIN_ROOT:=
+TOOLCHAIN_PATH:=
 TOOLCHAIN_PREFIX:=arm-none-eabi
 CURDIR=.
 
@@ -29,7 +29,8 @@ BIN_DIR = $(CURDIR)/binary
 vpath %.c $(CURDIR)/Libraries/STM32F4xx_StdPeriph_Driver/src \
           $(CURDIR)/Libraries/syscall $(CURDIR)/hardware $(FREERTOS) \
           $(FREERTOS)/portable/MemMang $(FREERTOS)/portable/GCC/ARM_CM4F \
-		  $(CURDIR)/Libraries/STM32_USB_Device_Library
+		  $(CURDIR)/Libraries/STM32_USB_Device_Library \
+		  $(CURDIR)/user
 
 vpath %.s $(STARTUP)
 ASRC=startup_stm32f401xx.s
@@ -111,12 +112,12 @@ CFLAGS=$(COMMONFLAGS) $(MCUFLAGS) $(INCLUDE) $(CDEFS)
 LDLIBS=-lm -lc -lgcc
 LDFLAGS=$(MCUFLAGS) -u _scanf_float -u _printf_float -nostartfiles -fno-exceptions -Wl,--gc-sections,-T$(LINKER_SCRIPT),-Map,$(BIN_DIR)/$(TARGET).map
 
-CC=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gcc
-LD=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gcc
-OBJCOPY=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-objcopy
-AS=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-as
-AR=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-ar
-GDB=$(TOOLCHAIN_PATH)/$(TOOLCHAIN_PREFIX)-gdb
+CC=$(TOOLCHAIN_PREFIX)-gcc
+LD=$(TOOLCHAIN_PREFIX)-gcc
+OBJCOPY=$(TOOLCHAIN_PREFIX)-objcopy
+AS=$(TOOLCHAIN_PREFIX)-as
+AR=$(TOOLCHAIN_PREFIX)-ar
+GDB=$(TOOLCHAIN_PREFIX)-gdb
 
 OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
 
