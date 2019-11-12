@@ -1,0 +1,41 @@
+
+# STD Defines
+DDEFS += -DSTM32F4XX -DSTM32F401xx -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=25000000
+DDEFS += -D__FPU_PRESENT=1
+DDEFS += -D__FPU_USED=1
+DDEFS += -DARM_MATH_CM4
+
+# source director
+STM32F4_STD_LIB     = $(STM32F40x_LIB_DIR)/STM32F4xx_StdPeriph_Driver
+STM32F4_CORE_DIR    = $(STM32F40x_LIB_DIR)/CMSIS/CM3/CoreSupport
+STM32F4_DEVICE_DIR  = $(STM32F40x_LIB_DIR)/CMSIS/CM3/DeviceSupport/ST/STM32F40x
+STM32F4_SRC_DIR     = $(STM32F4_STD_LIB)/src
+STM32F4_INC_DIR     = $(STM32F4_STD_LIB)/inc
+STM32F4_USB_LIB     = $(STM32F40x_LIB_DIR)/STM32_USB_Device_Library
+STM32F4_USB_SRC_DIR     = $(STM32F4_USB_LIB)/Core/src
+STM32F4_USB_INC_DIR     = $(STM32F4_USB_LIB)/Core/inc
+# startup
+ASM_SRC  += $(STM32F4_DEVICE_DIR)/startup/gcc_ride7/startup_stm32f4xx_md.s
+
+# CMSIS
+SRC  += $(STM32F4_DEVICE_DIR)/system_stm32f4xx.c
+
+# use libraries, please add or remove when you use or remove it.
+SRC  += $(STM32F4_SRC_DIR)/stm32f4xx_rcc.c
+SRC  += $(STM32F4_SRC_DIR)/stm32f4xx_gpio.c
+SRC  += $(STM32F4_SRC_DIR)/stm32f4xx_exti.c
+SRC  += $(STM32F4_SRC_DIR)/stm32f4xx_usart.c
+SRC  += $(STM32F4_SRC_DIR)/stm32f4xx_tim.c
+SRC  += $(STM32F4_SRC_DIR)/misc.c
+SRC  += $(STM32F4_USB_SRC_DIR)/usbd_core.c
+SRC  += $(STM32F4_USB_SRC_DIR)/usbd_ioreq.c
+SRC  += $(STM32F4_USB_SRC_DIR)/usbd_req.c
+
+# include directories
+INCLUDE_DIRS += $(STM32F4_CORE_DIR)
+INCLUDE_DIRS += $(STM32F4_DEVICE_DIR)
+INCLUDE_DIRS += $(STM32F4_INC_DIR)
+INCLUDE_DIRS += $(STM32F4_USB_INC_DIR)
+INCLUDE_DIRS += $(STM32F4_USB_SRC_DIR)
+INCLUDE_DIRS += $(STM32F4_STD_LIB)
+
