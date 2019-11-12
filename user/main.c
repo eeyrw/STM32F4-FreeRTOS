@@ -16,7 +16,7 @@ void test_FPU_test(void *p);
 
 int main(void)
 {
-  SystemInit();
+  //SystemInit();
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
   init_USART2();
 
@@ -133,9 +133,10 @@ void test_FPU_test(void *p)
     ff += s;
     // TODO some other test
     GPIO_SetBits(GPIOC, GPIO_Pin_13);
-
+printf("Led Off\n");
     vTaskDelay(1000);
     GPIO_ResetBits(GPIOC, GPIO_Pin_13);
+    printf("Led On\n");
     vTaskDelay(1000);
   }
 

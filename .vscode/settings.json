@@ -1,7 +1,11 @@
 {
     "files.encoding": "utf8",
     "C_Cpp.default.cStandard": "c99",
-    "C_Cpp.default.defines": ["NV32"],
-    "cortex-debug.JLinkGDBServerPath":"D:/SEGGER/JLink/JLinkGDBServerCL.exe"
+    "C_Cpp.default.defines": ["STM32F4XX","STM32F401xx","USE_STDPERIPH_DRIVER","HSE_VALUE=25000000","__FPU_PRESENT=1","__FPU_USED=1","ARM_MATH_CM4"],
+    "cortex-debug.JLinkGDBServerPath": "D:/SEGGER/JLink/JLinkGDBServerCL.exe",
+    "files.associations": {
+        "freertos.h": "c",
+        "portable.h": "c"
+    }
     
 }
