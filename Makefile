@@ -1,150 +1,109 @@
-TARGET:=FreeRTOS
-# TODO change to your ARM gcc toolchain path
-TOOLCHAIN_ROOT:=
-TOOLCHAIN_PATH:=
-TOOLCHAIN_PREFIX:=arm-none-eabi
-CURDIR=.
 
-# Optimization level, can be [0, 1, 2, 3, s].
-OPTLVL:=0
-DBG:=-g
+# toolchain
+TOOLCHAIN    = arm-none-eabi-
+CC           = $(TOOLCHAIN)gcc
+CP           = $(TOOLCHAIN)objcopy
+AS           = $(TOOLCHAIN)gcc -x assembler-with-cpp
+HEX          = $(CP) -O ihex
+BIN          = $(CP) -O binary -S
 
-FREERTOS:=$(CURDIR)/FreeRTOS
-STARTUP:=$(CURDIR)/hardware
-LINKER_SCRIPT:=$(CURDIR)/Utilities/stm32f401cc_flash.ld
+# define mcu, specify the target processor
+MCU          = cortex-m4
 
-INCLUDE=-I$(CURDIR)/hardware
-INCLUDE+=-I$(FREERTOS)/include
-INCLUDE+=-I$(FREERTOS)/portable/GCC/ARM_CM4F
-INCLUDE+=-I$(CURDIR)/Libraries/CMSIS/Device/ST/STM32F4xx/Include
-INCLUDE+=-I$(CURDIR)/Libraries/CMSIS/Include
-INCLUDE+=-I$(CURDIR)/Libraries/STM32F4xx_StdPeriph_Driver/inc
-INCLUDE+=-I$(CURDIR)/config
+# all the files will be generated with this name (main.elf, main.bin, main.hex, etc)
+PROJECT_NAME=FreeRTOS
 
-BUILD_DIR = $(CURDIR)/build
-BIN_DIR = $(CURDIR)/binary
+# specify define
+DDEFS       =
 
-# vpath is used so object files are written to the current directory instead
-# of the same directory as their source files
-vpath %.c $(CURDIR)/Libraries/STM32F4xx_StdPeriph_Driver/src \
-          $(CURDIR)/Libraries/syscall $(CURDIR)/hardware $(FREERTOS) \
-          $(FREERTOS)/portable/MemMang $(FREERTOS)/portable/GCC/ARM_CM4F \
-		  $(CURDIR)/Libraries/STM32_USB_Device_Library \
-		  $(CURDIR)/user
+# define root dir
+ROOT_DIR     = .
 
-vpath %.s $(STARTUP)
-ASRC=startup_stm32f401xx.s
+# define include dir
+INCLUDE_DIRS = $(ROOT_DIR)/Platform
 
-# Project Source Files
-SRC+=stm32f4xx_it.c
-SRC+=system_stm32f4xx.c
-SRC+=main.c
-SRC+=syscalls.c
+# define stm32f4 lib dir
+STM32F4_LIB_DIR      = $(ROOT_DIR)/Libraries
 
-# FreeRTOS Source Files
-SRC+=port.c
-SRC+=list.c
-SRC+=queue.c
-SRC+=tasks.c
-SRC+=event_groups.c
-SRC+=timers.c
-SRC+=heap_4.c
+# define freertos dir
+FREERTOS_DIR = $(ROOT_DIR)/Libraries/FreeRTOS
 
-# Standard Peripheral Source Files
-SRC+=misc.c
-#SRC+=stm32f4xx_dcmi.c
-#SRC+=stm32f4xx_hash.c
-SRC+=stm32f4xx_rtc.c
-SRC+=stm32f4xx_adc.c
-SRC+=stm32f4xx_dma.c
-#SRC+=stm32f4xx_hash_md5.c
-#SRC+=stm32f4xx_sai.c
-SRC+=stm32f4xx_can.c
-#SRC+=stm32f4xx_dma2d.c
-#SRC+=stm32f4xx_hash_sha1.c
-SRC+=stm32f4xx_sdio.c
-#SRC+=stm32f4xx_cec.c
-#SRC+=stm32f4xx_dsi.c
-SRC+=stm32f4xx_i2c.c
-#SRC+=stm32f4xx_spdifrx.c
-SRC+=stm32f4xx_crc.c
-SRC+=stm32f4xx_exti.c
-SRC+=stm32f4xx_iwdg.c
-SRC+=stm32f4xx_spi.c
-#SRC+=stm32f4xx_cryp.c
-SRC+=stm32f4xx_flash.c
-#SRC+=stm32f4xx_lptim.c
-SRC+=stm32f4xx_syscfg.c
-#SRC+=stm32f4xx_cryp_aes.c
-SRC+=stm32f4xx_flash_ramfunc.c
-#SRC+=stm32f4xx_ltdc.c
-SRC+=stm32f4xx_tim.c
-#SRC+=stm32f4xx_cryp_des.c
-#SRC+=stm32f4xx_fmc.c
-SRC+=stm32f4xx_pwr.c
-SRC+=stm32f4xx_usart.c
-#SRC+=stm32f4xx_cryp_tdes.c
-#SRC+=stm32f4xx_fmpi2c.c
-SRC+=stm32f4xx_qspi.c
-SRC+=stm32f4xx_wwdg.c
-SRC+=stm32f4xx_dac.c
-#SRC+=stm32f4xx_fsmc.c
-SRC+=stm32f4xx_rcc.c
-SRC+=stm32f4xx_dbgmcu.c
-SRC+=stm32f4xx_gpio.c
-SRC+=stm32f4xx_rng.c
+# define user dir
+APP_DIR     = $(ROOT_DIR)/App
+
+# link file
+LINK_SCRIPT  = $(ROOT_DIR)/Platform/stm32f401cc_flash.ld
+
+# user specific
+
+ASM_SRC  = $(ROOT_DIR)/Platform/startup_stm32f401xx.s
+
+SRC      =
+SRC  	+= $(ROOT_DIR)/Platform/system_stm32f4xx.c
+SRC     += $(APP_DIR)/main.c
 
 
+# user include
+INCLUDE_DIRS  += $(APP_DIR)
+INCLUDE_DIRS  += $(APP_DIR)/Usb
+INCLUDE_DIRS  += $(APP_DIR)/Hal
 
+# include sub makefiles
+include makefile_std_lib.mk   # STM32 Standard Peripheral Library
+include makefile_freertos.mk  # freertos source
 
-CDEFS=-DUSE_STDPERIPH_DRIVER
-CDEFS+=-DSTM32F4XX
-CDEFS+=-DSTM32F401xx
-CDEFS+=-DHSE_VALUE=25000000
-CDEFS+=-D__FPU_PRESENT=1
-CDEFS+=-D__FPU_USED=1
-CDEFS+=-DARM_MATH_CM4
+INC_DIR  = $(patsubst %, -I%, $(INCLUDE_DIRS))
 
-MCUFLAGS=-mcpu=cortex-m4 -mthumb -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -finline-functions -Wdouble-promotion -std=gnu99
-COMMONFLAGS=-O$(OPTLVL) $(DBG) -Wall -ffunction-sections -fdata-sections
-CFLAGS=$(COMMONFLAGS) $(MCUFLAGS) $(INCLUDE) $(CDEFS)
+# run from Flash
+DEFS	 = $(DDEFS)
 
-LDLIBS=-lm -lc -lgcc
-LDFLAGS=$(MCUFLAGS) -u _scanf_float -u _printf_float -nostartfiles -fno-exceptions -Wl,--gc-sections,-T$(LINKER_SCRIPT),-Map,$(BIN_DIR)/$(TARGET).map
+OBJECTS  = $(ASM_SRC:.s=.o) $(SRC:.c=.o)
 
-CC=$(TOOLCHAIN_PREFIX)-gcc
-LD=$(TOOLCHAIN_PREFIX)-gcc
-OBJCOPY=$(TOOLCHAIN_PREFIX)-objcopy
-AS=$(TOOLCHAIN_PREFIX)-as
-AR=$(TOOLCHAIN_PREFIX)-ar
-GDB=$(TOOLCHAIN_PREFIX)-gdb
+# Define optimisation level here
+OPT = -Os
 
-OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
+MC_FLAGS = -mcpu=$(MCU) -mfloat-abi=hard -mfpu=fpv4-sp-d16 -fsingle-precision-constant -finline-functions -Wdouble-promotion -std=gnu99
 
-$(BUILD_DIR)/%.o: %.c
+AS_FLAGS = $(MC_FLAGS) -lm -lc -lgcc -g -gdwarf-2 -mthumb  -Wa,-amhls=$(<:.s=.lst)
+CP_FLAGS = $(MC_FLAGS) $(OPT) -fdata-sections -ffunction-sections -g -gdwarf-2 -mthumb -fomit-frame-pointer -Wall -fverbose-asm -Wa,-ahlms=$(<:.c=.lst) $(DEFS)
+LD_FLAGS = $(MC_FLAGS) -u _scanf_float -u _printf_float -g -specs=nano.specs -specs=nosys.specs -gdwarf-2 -mthumb -nostartfiles -Xlinker -T$(LINK_SCRIPT) -Wl,-Map=$(PROJECT_NAME).map,--cref,--no-warn-mismatch,--gc-sections
+
+#
+# makefile rules
+#
+all: $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
+	$(TOOLCHAIN)size $(PROJECT_NAME).elf
+
+%.o: %.c Makefile makefile_std_lib.mk $(LINK_SCRIPT)
 	@echo [CC] $(notdir $<)
-	@$(CC) $(CFLAGS) $< -c -o $@
+	@$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
 
-all: $(OBJ)
-	@echo [AS] $(ASRC)
-	@$(AS) -o $(ASRC:%.s=$(BUILD_DIR)/%.o) $(STARTUP)/$(ASRC)
-	@echo [LD] $(TARGET).elf
-	@$(CC) -o $(BIN_DIR)/$(TARGET).elf $(LDFLAGS) $(OBJ) $(ASRC:%.s=$(BUILD_DIR)/%.o) $(LDLIBS)
-	@echo [HEX] $(TARGET).hex
-	@$(OBJCOPY) -O ihex $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).hex
-	@echo [BIN] $(TARGET).bin
-	@$(OBJCOPY) -O binary $(BIN_DIR)/$(TARGET).elf $(BIN_DIR)/$(TARGET).bin
+%.o: %.s
+	@echo [AS] $(notdir $<)
+	@$(AS) -c $(AS_FLAGS) $< -o $@
 
-.PHONY: clean
+%.elf: $(OBJECTS)
+	@echo [LD] $(PROJECT_NAME).elf
+	@$(CC) $(OBJECTS) $(LD_FLAGS) -o $@
+
+%.hex: %.elf
+	@echo [HEX] $(PROJECT_NAME).hex
+	@$(HEX) $< $@
+
+%.bin: %.elf
+	@echo [BIN] $(PROJECT_NAME).bin
+	@$(BIN)  $< $@
 
 clean:
 	@echo [RM] OBJ
-	@rm -f $(OBJ)
-	@rm -f $(ASRC:%.s=$(BUILD_DIR)/%.o)
-	@echo [RM] BIN
-	@rm -f $(BIN_DIR)/$(TARGET).elf
-	@rm -f $(BIN_DIR)/$(TARGET).hex
-	@rm -f $(BIN_DIR)/$(TARGET).bin
+	@-rm -rf $(OBJECTS)
+	@echo [RM] BIN "(ELF,HEX,BIN)"
+	@-rm -rf $(PROJECT_NAME).elf
+	@-rm -rf $(PROJECT_NAME).hex
+	@-rm -rf $(PROJECT_NAME).bin
+	@echo [RM] LST
+	@-rm -rf $(SRC:.c=.lst)
+	@-rm -rf $(ASM_SRC:.s=.lst)
+	@echo [RM] MAP
+	@-rm -rf $(PROJECT_NAME).map
 
-flash:
-	@st-flash write $(BIN_DIR)/$(TARGET).bin 0x8000000

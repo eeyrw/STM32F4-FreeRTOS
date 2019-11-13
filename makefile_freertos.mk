@@ -13,7 +13,7 @@ SRC  += $(FREERTOS_SRC_DIR)/tasks.c
 SRC  += $(FREERTOS_SRC_DIR)/event_groups.c
 SRC  += $(FREERTOS_SRC_DIR)/timers.c
 
-SRC  += $(FREERTOS_ARM_CM3_DIR)/port.c
+SRC  += $(FREERTOS_ARM_CM4_DIR)/port.c
 
 SRC  += $(FREERTOS_MemMang_DIR)/heap_4.c
 

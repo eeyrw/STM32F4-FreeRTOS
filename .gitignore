@@ -18,6 +18,7 @@
 *.hex
 *.bin
 *.elf
+*.lst
 *.map
 
 .DS_Store
