@@ -48,6 +48,7 @@ SRC  	+= $(APP_DIR)/Usb/Audio/usbd_audio_out_if.c
 SRC  	+= $(APP_DIR)/Usb/usbd_usr.c
 SRC  	+= $(APP_DIR)/Usb/usbd_desc.c
 SRC  	+= $(APP_DIR)/Usb/usb_bsp.c
+SRC  	+= $(STM32F4_LIB_DIR)/syscall/syscalls.c
 
 # user include
 INCLUDE_DIRS  += $(APP_DIR)

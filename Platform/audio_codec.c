@@ -165,6 +165,8 @@ uint32_t EVAL_AUDIO_Play(uint16_t * pBuffer, uint32_t Size)
   /* Update the current audio pointer position */
   CurrentPos = pBuffer + DMA_MAX(AudioTotalSize);
 
+  printf("EVAL_AUDIO_Play:%d\r\n",Size);
+
   return 0;
 }
 
@@ -236,6 +238,7 @@ uint32_t EVAL_AUDIO_Stop(uint32_t Option)
   }
   else
   {
+	  printf("EVAL_AUDIO_Stop:%d\r\n",Option);
     /* Call Media layer Stop function */
     Audio_MAL_Stop();
 
@@ -256,6 +259,7 @@ uint32_t EVAL_AUDIO_Stop(uint32_t Option)
 uint32_t EVAL_AUDIO_VolumeCtl(uint8_t Volume)
 {
   /* Call the codec volume control function with converted volume value */
+	printf("Vol Change:%d\r\n",Volume);
   return (Codec_VolumeCtrl(VOLUME_CONVERT(Volume)));
 }
 
@@ -268,6 +272,8 @@ uint32_t EVAL_AUDIO_VolumeCtl(uint8_t Volume)
 uint32_t EVAL_AUDIO_Mute(uint32_t Cmd)
 {
   /* Call the Codec Mute function */
+	printf("Vol Mute:%d\r\n",Cmd);
+
   return (Codec_Mute(Cmd));
 }
 
@@ -392,7 +398,7 @@ void Audio_MAL_IRQHandler(void)
 uint32_t Codec_Init(uint16_t OutputDevice, uint8_t Volume, uint32_t AudioFreq)
 {
   uint32_t counter = 0;
-#if 0
+
   /* Reset the Codec Registers */
   Codec_Reset();
 
@@ -401,7 +407,7 @@ uint32_t Codec_Init(uint16_t OutputDevice, uint8_t Volume, uint32_t AudioFreq)
 
   /* Initialize the Control interface of the Audio Codec */
   Codec_CtrlInterface_Init();
-
+#if 0
   /* Keep Codec powered OFF */
   counter += Codec_WriteRegister(0x02, 0x01);
 
@@ -480,10 +486,10 @@ uint32_t Codec_Init(uint16_t OutputDevice, uint8_t Volume, uint32_t AudioFreq)
   /* Adjust PCM volume level */
   counter += Codec_WriteRegister(0x1A, 0x0A);
   counter += Codec_WriteRegister(0x1B, 0x0A);
-
+#endif
   /* Configure the I2S peripheral */
   Codec_AudioInterface_Init(AudioFreq);
-#endif
+
   /* Return communication control value */
   return counter;
 }
@@ -498,13 +504,13 @@ uint32_t Codec_DeInit(void)
 {
   uint32_t counter = 0;
 
-#if 0
+
   /* Reset the Codec Registers */
   Codec_Reset();
-
+#if 0
   /* Keep Codec powered OFF */
   counter += Codec_WriteRegister(0x02, 0x01);
-
+#endif
   /* Deinitialize all use GPIOs */
   Codec_GPIO_DeInit();
 
@@ -513,7 +519,7 @@ uint32_t Codec_DeInit(void)
 
   /* Deinitialize the Codec audio interface (I2S) */
   Codec_AudioInterface_DeInit();
-#endif
+
   /* Return communication control value */
   return counter;
 }
@@ -548,19 +554,21 @@ uint32_t Codec_PauseResume(uint32_t Cmd)
   {
     /* Mute the output first */
     counter += Codec_Mute(AUDIO_MUTE_ON);
-
+#if 0
     /* Put the Codec in Power save mode */
     counter += Codec_WriteRegister(0x02, 0x01);
+#endif
   }
   else                          /* AUDIO_RESUME */
   {
     /* Unmute the output first */
     counter += Codec_Mute(AUDIO_MUTE_OFF);
-
+#if 0
     counter += Codec_WriteRegister(0x04, OutputDev);
 
     /* Exit the Power save mode */
     counter += Codec_WriteRegister(0x02, 0x9E);
+#endif
   }
 
   return counter;
@@ -985,6 +993,7 @@ static void Codec_CtrlInterface_DeInit(void)
   */
 static void Codec_AudioInterface_Init(uint32_t AudioFreq)
 {
+	printf("Codec_AudioInterface_Init\r\n");
   /* Enable the CODEC_I2S peripheral clock */
   RCC_APB1PeriphClockCmd(CODEC_I2S_CLK, ENABLE);
   RCC->APB1ENR |= RCC_APB1Periph_SPI2 | RCC_APB1Periph_SPI3;
@@ -1021,6 +1030,7 @@ static void Codec_AudioInterface_Init(uint32_t AudioFreq)
   */
 static void Codec_AudioInterface_DeInit(void)
 {
+	printf("Codec_AudioInterface_DeInit\r\n");
   /* Disable the CODEC_I2S peripheral (in case it hasn't already been disabled) 
    */
   I2S_Cmd(CODEC_I2S, DISABLE);
@@ -1041,6 +1051,7 @@ static void Codec_AudioInterface_DeInit(void)
 static void Codec_GPIO_Init(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
+	printf("Codec_GPIO_Init\r\n");
 
   /* Enable I2S and I2C GPIO clocks */
   RCC_AHB1PeriphClockCmd(CODEC_I2C_GPIO_CLOCK | CODEC_I2S_GPIO_CLOCK, ENABLE);
@@ -1097,6 +1108,7 @@ static void Codec_GPIO_Init(void)
 static void Codec_GPIO_DeInit(void)
 {
   GPIO_InitTypeDef GPIO_InitStructure;
+  printf("Codec_GPIO_DeInit\r\n");
 
   /* Deinitialize all the GPIOs used by the driver (EXCEPT the I2C IOs since
    * they are used by the IOExpander as well) */
@@ -1162,7 +1174,7 @@ void Audio_MAL_Init(void)
 #if defined(AUDIO_MAL_DMA_IT_TC_EN) || defined(AUDIO_MAL_DMA_IT_HT_EN) || defined(AUDIO_MAL_DMA_IT_TE_EN)
   NVIC_InitTypeDef NVIC_InitStructure;
 #endif
-
+  printf("Audio_MAL_Init\r\n");
   /* Enable the DMA clock */
   RCC_AHB1PeriphClockCmd(AUDIO_MAL_DMA_CLOCK, ENABLE);
 
@@ -1240,7 +1252,7 @@ void Audio_MAL_DeInit(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = DISABLE;
   NVIC_Init(&NVIC_InitStructure);
 #endif
-
+  printf("Audio_MAL_DeInit\r\n");
   /* Disable the DMA stream before the deinit */
   DMA_Cmd(AUDIO_MAL_DMA_STREAM, DISABLE);
 
@@ -1390,6 +1402,7 @@ void Audio_MAL_PauseResume(uint32_t Cmd, uint32_t Addr, uint32_t Size)
   */
 void Audio_MAL_Stop(void)
 {
+	  printf("Audio_MAL_Stop\r\n");
   /* Stop the Transfer on the I2S side: Stop and disable the DMA stream */
   DMA_Cmd(AUDIO_MAL_DMA_STREAM, DISABLE);
 

@@ -30,7 +30,7 @@ USB_OTG_CORE_HANDLE USB_OTG_dev;
 
 int main(void)
 {
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
+
   init_USART2();
 
   USBD_Init(&USB_OTG_dev,
@@ -40,7 +40,7 @@ int main(void)
             USB_OTG_FS_CORE_ID,
 #endif
             &USR_desc, &AUDIO_cb, &USR_cb);
-
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
   // Create a task
   // Stack and TCB are placed in CCM of STM32F4
   // The CCM block is connected directly to the core, which leads to zero wait states
@@ -150,15 +150,13 @@ void test_FPU_test(void *p)
   printf("Start FPU test task.\n");
   for (;;)
   {
-    float s = sinf(ff);
-    ff += s;
     // TODO some other test
     GPIO_SetBits(GPIOC, GPIO_Pin_13);
-    printf("Led Off\n");
-    vTaskDelay(1000);
+    //printf("Led Off\n");
+    vTaskDelay(500);
     GPIO_ResetBits(GPIOC, GPIO_Pin_13);
-    printf("Led On\n");
-    vTaskDelay(1000);
+    //printf("Led On\n");
+    vTaskDelay(500);
   }
 
   vTaskDelete(NULL);

@@ -127,6 +127,7 @@ void USBD_USR_DeviceReset(uint8_t speed)
     break;
 
   case USB_OTG_SPEED_FULL:
+	  printf("Usb device reset!\r\n");
     break;
   default:
   break;
@@ -142,6 +143,8 @@ void USBD_USR_DeviceReset(uint8_t speed)
 */
 void USBD_USR_DeviceConfigured(void)
 {
+	  printf("Usb device configured!\r\n");
+
 }
 
 /**
@@ -152,6 +155,8 @@ void USBD_USR_DeviceConfigured(void)
 */
 void USBD_USR_DeviceSuspended(void)
 {
+	  printf("Usb device Suspended!\r\n");
+
   /* Users can do their application actions here for the USB-Reset */
 }
 
@@ -164,6 +169,7 @@ void USBD_USR_DeviceSuspended(void)
 */
 void USBD_USR_DeviceResumed(void)
 {
+	  printf("Usb device Resumed!\r\n");
   /* Users can do their application actions here for the USB-Reset */
 }
 
@@ -175,6 +181,8 @@ void USBD_USR_DeviceResumed(void)
 */
 void USBD_USR_DeviceConnected(void)
 {
+	  printf("Usb device Connected!\r\n");
+
 }
 
 
@@ -186,6 +194,7 @@ void USBD_USR_DeviceConnected(void)
 */
 void USBD_USR_DeviceDisconnected(void)
 {
+	  printf("Usb device Disconnected!\r\n");
 }
 
 

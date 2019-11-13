@@ -48,7 +48,7 @@
 /* Audio Transfer mode (DMA, Interrupt or Polling) */
 #define AUDIO_MAL_MODE_NORMAL         /* Uncomment this line to enable the audio \
                                          Transfer using DMA */
-/* #define AUDIO_MAL_MODE_CIRCULAR */ /* Uncomment this line to enable the audio 
+/* #define AUDIO_MAL_MODE_CIRCULAR */ /* Uncomment this line to enable the audio
                                          Transfer using DMA */
 
 /* For the DMA modes select the interrupt that will be used */

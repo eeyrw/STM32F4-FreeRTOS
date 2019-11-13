@@ -66,19 +66,19 @@
   *-----------------------------------------------------------------------------
   *        PLL_Q                                  | 7
   *-----------------------------------------------------------------------------
-  *        PLLI2S_N                               | 426
+  *        PLLI2S_N                               | 384
   *-----------------------------------------------------------------------------
-  *        PLLI2S_R                               | 4
+  *        PLLI2S_R                               | 2
   *-----------------------------------------------------------------------------
-  *        I2S input clock(Hz)                    | 106500000
+  *        I2S input clock(Hz)                    | 192000000
   *                                               |
   *        To achieve the following I2S config:   |
-  *         - Master clock output (MCKO): ON      |
+  *         - Master clock output (MCKO): OFF     |
   *         - Frame wide                : 16bit   |
-  *         - Audio sampling freq (KHz) : 32      |
-  *         - Error %                   : 0.0038  |
+  *         - Audio sampling freq (KHz) : 48      |
+  *         - Error %                   : 0.0000  |
   *         - Prescaler Odd factor (ODD): 1       |
-  *         - Linear prescaler (DIV)    : 6       |
+  *         - Linear prescaler (DIV)    : 62      |
   *-----------------------------------------------------------------------------
   *        VDD(V)                                 | 3.3
   *-----------------------------------------------------------------------------
@@ -171,8 +171,8 @@
 
 /* PLLI2S_VCO = (HSE_VALUE Or HSI_VALUE / PLL_M) * PLLI2S_N
    I2SCLK = PLLI2S_VCO / PLLI2S_R */
-#define PLLI2S_N   426
-#define PLLI2S_R   4
+#define PLLI2S_N   384
+#define PLLI2S_R   2
 
 /******************************************************************************/
 
