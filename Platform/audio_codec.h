@@ -94,8 +94,8 @@
 
 /* Uncomment the defines below to select if the Master clock mode should be 
   enabled or not */
-#define CODEC_MCLK_ENABLED
-/* #deine CODEC_MCLK_DISABLED */
+//#define CODEC_MCLK_ENABLED
+#define CODEC_MCLK_DISABLED
 
 /* Uncomment this line to enable verifying data sent to codec after each write 
   operation */
@@ -111,16 +111,16 @@
 #define CODEC_I2S_ADDRESS              0x4000380C
 #define CODEC_I2S_GPIO_AF              GPIO_AF_SPI2
 #define CODEC_I2S_IRQ                  SPI2_IRQn
-#define CODEC_I2S_GPIO_CLOCK           (RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOI)
-#define CODEC_I2S_WS_PIN               GPIO_Pin_0
-#define CODEC_I2S_SCK_PIN              GPIO_Pin_1
-#define CODEC_I2S_SD_PIN               GPIO_Pin_3
+#define CODEC_I2S_GPIO_CLOCK           (RCC_AHB1Periph_GPIOC | RCC_AHB1Periph_GPIOB)
+#define CODEC_I2S_WS_PIN               GPIO_Pin_12
+#define CODEC_I2S_SCK_PIN              GPIO_Pin_10
+#define CODEC_I2S_SD_PIN               GPIO_Pin_15
 #define CODEC_I2S_MCK_PIN              GPIO_Pin_6
-#define CODEC_I2S_WS_PINSRC            GPIO_PinSource0
-#define CODEC_I2S_SCK_PINSRC           GPIO_PinSource1
-#define CODEC_I2S_SD_PINSRC            GPIO_PinSource3
+#define CODEC_I2S_WS_PINSRC            GPIO_PinSource12
+#define CODEC_I2S_SCK_PINSRC           GPIO_PinSource10
+#define CODEC_I2S_SD_PINSRC            GPIO_PinSource15
 #define CODEC_I2S_MCK_PINSRC           GPIO_PinSource6
-#define CODEC_I2S_GPIO                 GPIOI
+#define CODEC_I2S_GPIO                 GPIOB
 #define CODEC_I2S_MCK_GPIO             GPIOC
 
 
@@ -152,9 +152,9 @@
 #define CODEC_I2C_GPIO_AF              GPIO_AF_I2C1
 #define CODEC_I2C_GPIO                 GPIOB
 #define CODEC_I2C_SCL_PIN              GPIO_Pin_6
-#define CODEC_I2C_SDA_PIN              GPIO_Pin_9
+#define CODEC_I2C_SDA_PIN              GPIO_Pin_7
 #define CODEC_I2S_SCL_PINSRC           GPIO_PinSource6
-#define CODEC_I2S_SDA_PINSRC           GPIO_PinSource9
+#define CODEC_I2S_SDA_PINSRC           GPIO_PinSource7
 
 /* Maximum Timeout values for flags and events waiting loops. These timeouts are
    not based on accurate values, they just guarantee that the application will 
