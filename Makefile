@@ -40,12 +40,19 @@ ASM_SRC  = $(ROOT_DIR)/Platform/startup_stm32f401xx.s
 
 SRC      =
 SRC  	+= $(ROOT_DIR)/Platform/system_stm32f4xx.c
+SRC  	+= $(ROOT_DIR)/Platform/stm32f4xx_it.c
+SRC  	+= $(ROOT_DIR)/Platform/audio_codec.c
 SRC     += $(APP_DIR)/main.c
-
+SRC  	+= $(APP_DIR)/Usb/Audio/usbd_audio_core.c
+SRC  	+= $(APP_DIR)/Usb/Audio/usbd_audio_out_if.c
+SRC  	+= $(APP_DIR)/Usb/usbd_usr.c
+SRC  	+= $(APP_DIR)/Usb/usbd_desc.c
+SRC  	+= $(APP_DIR)/Usb/usb_bsp.c
 
 # user include
 INCLUDE_DIRS  += $(APP_DIR)
 INCLUDE_DIRS  += $(APP_DIR)/Usb
+INCLUDE_DIRS  += $(APP_DIR)/Usb/Audio
 INCLUDE_DIRS  += $(APP_DIR)/Hal
 
 # include sub makefiles

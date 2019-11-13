@@ -4,6 +4,9 @@
 #include "math.h"
 #include "stdio.h"
 #include "stm32f4xx_usart.h"
+#include "usbd_audio_core.h"
+#include "usbd_usr.h"
+#include "usb_conf.h"
 
 #define FPU_TASK_STACK_SIZE 256
 
@@ -14,8 +17,26 @@ void init_USART2(void);
 
 void test_FPU_test(void *p);
 
+#ifdef USB_OTG_HS_INTERNAL_DMA_ENABLED
+#if defined   (__CC_ARM)        /* !< ARM Compiler */
+__align(4)
+#elif defined ( __ICCARM__ )    /* !< IAR Compiler */
+#pragma data_alignment=4
+#elif defined (__GNUC__)        /* !< GNU Compiler */
+#pragma pack(4)
+#endif                          /* __CC_ARM */
+#endif
+USB_OTG_CORE_HANDLE USB_OTG_dev;
+
 int main(void)
 {
+    USBD_Init(&USB_OTG_dev,
+#ifdef USE_USB_OTG_HS
+            USB_OTG_HS_CORE_ID,
+#else
+            USB_OTG_FS_CORE_ID, 
+#endif
+            &USR_desc, &AUDIO_cb, &USR_cb);
   //SystemInit();
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_4);
   init_USART2();
@@ -133,7 +154,7 @@ void test_FPU_test(void *p)
     ff += s;
     // TODO some other test
     GPIO_SetBits(GPIOC, GPIO_Pin_13);
-printf("Led Off\n");
+    printf("Led Off\n");
     vTaskDelay(1000);
     GPIO_ResetBits(GPIOC, GPIO_Pin_13);
     printf("Led On\n");

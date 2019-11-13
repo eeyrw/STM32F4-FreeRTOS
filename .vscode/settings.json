@@ -5,7 +5,12 @@
     "cortex-debug.JLinkGDBServerPath": "D:/SEGGER/JLink/JLinkGDBServerCL.exe",
     "files.associations": {
         "freertos.h": "c",
-        "portable.h": "c"
+        "portable.h": "c",
+        "stm32f4xx_it.h": "c",
+        "usbd_usr.h": "c",
+        "usb_bsp.h": "c",
+        "usbd_audio_out_if.h": "c",
+        "usbd_audio_core.h": "c"
     }
     
 }
