@@ -392,7 +392,7 @@ void Audio_MAL_IRQHandler(void)
 uint32_t Codec_Init(uint16_t OutputDevice, uint8_t Volume, uint32_t AudioFreq)
 {
   uint32_t counter = 0;
-
+#if 0
   /* Reset the Codec Registers */
   Codec_Reset();
 
@@ -483,7 +483,7 @@ uint32_t Codec_Init(uint16_t OutputDevice, uint8_t Volume, uint32_t AudioFreq)
 
   /* Configure the I2S peripheral */
   Codec_AudioInterface_Init(AudioFreq);
-
+#endif
   /* Return communication control value */
   return counter;
 }
@@ -498,6 +498,7 @@ uint32_t Codec_DeInit(void)
 {
   uint32_t counter = 0;
 
+#if 0
   /* Reset the Codec Registers */
   Codec_Reset();
 
@@ -512,7 +513,7 @@ uint32_t Codec_DeInit(void)
 
   /* Deinitialize the Codec audio interface (I2S) */
   Codec_AudioInterface_DeInit();
-
+#endif
   /* Return communication control value */
   return counter;
 }
@@ -579,7 +580,7 @@ uint32_t Codec_PauseResume(uint32_t Cmd)
 uint32_t Codec_Stop(uint32_t CodecPdwnMode)
 {
   uint32_t counter = 0;
-
+#if 0
   /* Mute the output first */
   Codec_Mute(AUDIO_MUTE_ON);
 
@@ -599,7 +600,7 @@ uint32_t Codec_Stop(uint32_t CodecPdwnMode)
     /* Reset The pin */
     //IOE_WriteIOPin(AUDIO_RESET_PIN, BitReset);
   }
-
+#endif
   return counter;
 }
 
@@ -612,7 +613,7 @@ uint32_t Codec_Stop(uint32_t CodecPdwnMode)
 uint32_t Codec_VolumeCtrl(uint8_t Volume)
 {
   uint32_t counter = 0;
-
+#if 0
   if (Volume > 0xE6)
   {
     /* Set the Master volume */
@@ -625,7 +626,7 @@ uint32_t Codec_VolumeCtrl(uint8_t Volume)
     counter += Codec_WriteRegister(0x20, Volume + 0x19);
     counter += Codec_WriteRegister(0x21, Volume + 0x19);
   }
-
+#endif
   return counter;
 }
 
@@ -638,7 +639,7 @@ uint32_t Codec_VolumeCtrl(uint8_t Volume)
 uint32_t Codec_Mute(uint32_t Cmd)
 {
   uint32_t counter = 0;
-
+#if 0
   /* Set the Mute mode */
   if (Cmd == AUDIO_MUTE_ON)
   {
@@ -648,7 +649,7 @@ uint32_t Codec_Mute(uint32_t Cmd)
   {
     counter += Codec_WriteRegister(0x04, OutputDev);
   }
-
+#endif
   return counter;
 }
 
@@ -688,7 +689,7 @@ static void Codec_Reset(void)
 uint32_t Codec_SwitchOutput(uint8_t Output)
 {
   uint8_t counter = 0;
-
+#if 0
   switch (Output)
   {
   case OUTPUT_DEVICE_SPEAKER:
@@ -721,7 +722,7 @@ uint32_t Codec_SwitchOutput(uint8_t Output)
     OutputDev = 0x05;
     break;
   }
-
+#endif
   return counter;
 }
 

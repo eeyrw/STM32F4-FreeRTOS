@@ -26,7 +26,7 @@ __align(4)
 #pragma pack(4)
 #endif /* __CC_ARM */
 #endif
-    USB_OTG_CORE_HANDLE USB_OTG_dev;
+USB_OTG_CORE_HANDLE USB_OTG_dev;
 
 int main(void)
 {
