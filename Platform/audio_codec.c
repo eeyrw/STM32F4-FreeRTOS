@@ -372,7 +372,8 @@ void Audio_MAL_IRQHandler(void)
   {
     /* Manage the error generated on DMA FIFO: This function should be coded
      * by user (its prototype is already declared in stm32_eval_audio_codec.h) */
-    EVAL_AUDIO_Error_CallBack((uint32_t *) & pAddr);
+    //EVAL_AUDIO_Error_CallBack((uint32_t *) & pAddr);
+    printf("DMA Error.\r\n");
 
     /* Clear the Interrupt flag */
     DMA_ClearFlag(AUDIO_MAL_DMA_STREAM,

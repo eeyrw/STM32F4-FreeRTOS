@@ -54,7 +54,7 @@
 /* For the DMA modes select the interrupt that will be used */
 /* #define AUDIO_MAL_DMA_IT_TC_EN */ /* Uncomment this line to enable DMA Transfer Complete interrupt */
 /* #define AUDIO_MAL_DMA_IT_HT_EN */ /* Uncomment this line to enable DMA Half Transfer Complete interrupt */
-/* #define AUDIO_MAL_DMA_IT_TE_EN */ /* Uncomment this line to enable DMA Transfer Error interrupt */
+#define AUDIO_MAL_DMA_IT_TE_EN /* Uncomment this line to enable DMA Transfer Error interrupt */
 
 /* #define USE_DMA_PAUSE_FEATURE */ /* Uncomment this line to enable the use of DMA Pause Feature
                                  When this define is enabled, the Pause function will
